@@ -9,6 +9,21 @@ export const authOptions: NextAuthOptions = {
     GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      authorization: {params: {scope: "user,repo"}}
     }),
   ],
+  callbacks: {
+    async jwt({ token, account }) {
+      // If the user has just logged in, store the access token in the JWT
+      if (account && account.accessToken) {
+        token.accessToken = account.accessToken;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Forward the access token to the session
+      session.accessToken = token.accessToken;
+      return session;
+    },
+  },
 };
