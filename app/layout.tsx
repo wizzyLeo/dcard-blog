@@ -7,6 +7,8 @@ import Navbar from "@/components/Navbar";
 import BlogList from "@/components/BlogList";
 import { blogData } from "@/public/blog-data";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,11 +25,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SessionProvider>
-        <body className={inter.className}>
-        <div className="flex flex-col w-screen min-h-screen">
-          <Navbar/>
-          {children}
-        </div>  
+        <body className={cn(inter.className, "min-width-[400px] w-screen min-h-screen ")}>
+          <div className="flex flex-col w-full h-full">
+            <Navbar/>
+            {children}
+          </div>  
+          <Toaster />
         </body>
       </SessionProvider>
     </html>

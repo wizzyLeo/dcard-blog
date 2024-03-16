@@ -1,11 +1,7 @@
 import BlogList from "@/components/BlogList";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { blogData, userData } from "@/public/blog-data";
-import Navbar from "@/components/Navbar";
 import { Octokit } from "octokit";
 import { BlogListItemType } from "@/lib/posts";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -40,7 +36,7 @@ async function getProcessedBlogReponse(owner: string) {
               hero: matter(issue.body).data.hero || "/heros/default-hero.jpg",
               description: matter(issue.body).data.description || "",
               editTime: issue.created_at,
-              id: issue.number,
+              id: +issue.number,
               title: issue.title,
               content: matter(issue.body).content,
               owner: issue.user!.login
@@ -72,21 +68,19 @@ async function getBlogData(owner: string){
   }
 
   const blogData= await res.json()
-
   return blogData
 }
 
 
-export default async function ViewHome({params}: {params: {owner:string}}) {
+export default async function ViewPage({params}: {params: {owner:string}}) {
   const owner  = params.owner;
   const blogData: BlogListItemType[] = await getBlogData(owner)
-  console.log(blogData)
+  console.log()
   return (
-    <div className="w-[1000px] h-screen grid grid-center mx-auto">
-      <Suspense fallback={<p>Loading Block</p>}>
+    <div className=" w-full h-screen grid grid-center mx-auto">
+      <Suspense fallback={<p>Loading Blogs</p>}>
         <BlogList blogs={blogData}></BlogList>
       </Suspense>
-      <Button>Hello World</Button>
     </div>
   );
 }
