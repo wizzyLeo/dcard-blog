@@ -74,10 +74,7 @@ async function getProcessedBlogReponse(owner: string, id: number) {
 export default async function PostPage({params} : {params: {owner: string, id: string}}){
     const owner = params.owner
     const id = +params.id
-    console.log("owner: ", owner)
-    console.log("id: ", id)
     const blogData:BlogListItemType = await getBlogData(owner, id)
-    console.log(blogData.hero)
     return (
         <div className="mx-8 my-6 p-4 w-screen flex flex-col items-center justify-around">
                 <Image src={blogData.hero} width={1200} height={500} alt="hero" className="aspect-video"/>

@@ -64,3 +64,7 @@
 .markdown > * {
   all: revert;
 }
+
+Image{
+  border-radius: 5px;
+}

@@ -2,57 +2,49 @@
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { cn } from "@/lib/utils";
 import { Badge } from "./ui/badge";
-import { ComponentProps } from "react";
-import { Octokit } from "octokit";
+import { ComponentProps, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { BlogListItemType } from "@/lib/posts";
 import moment from 'moment'
 import Link from "next/link";
-import { useRouter } from "next/router";
+import markdownToText from 'markdown-to-txt';
 
 interface BlogListProps{
     blogs: BlogListItemType[]
 }
 
 
+function getSlicedContent(content:string, width: number){
+    return content.substring(0, width > 400 ? 300 : 200) + "..."
+}
+
 
 
 
 const BlogList= ({blogs}:BlogListProps) => {
+    
     return (
-        <ScrollArea className="h-screen">
-            <div className="flex flex-col gap-2 p-4 pt-0">
-                {blogs.map((blog)=>(
-                    <button
-                        key={blog.id}
-                        className={cn(
-                            "flex  items-start gap-6 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent"
-                        )}
-                    >
-                        <Image src={blog.hero} width={100} height={100}  className="rounded-xl h-full" alt="hero"/>
-                        <div className="w-full flex flex-col gap-1">
-                            {/* horizontal layout */}
-                            <div className="flex items-center">
-                                <div className="flex items-center gap-2">
-                                    <Link href={`/view/${blog.owner}/${blog.id}`}>
-                                        <div className="font-semibold">{blog.title}</div>
-                                    </Link>
+        <ScrollArea className="w-full h-full flex flex-col items-center">
+            <div className="flex flex-col gap-8 py-12 px-24 pt-0 ">
+                {blogs.map((blog)=>{
+                    return (
+                        <div 
+                            className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl"
+                            key={blog.id}
+                            >
+                            <div className="md:flex lg:w-[1200px] min-h-[300px]">
+                                <div className="md:shrink-0">
+                                    <Image height={500} width={500} className="h-full w-full object-cover object-center md:h-full md:w-48" src={blog.hero} alt="Modern building architecture"/>
                                 </div>
-                                <div
-                                    className={cn(
-                                        "ml-auto text-xs"
-                                    )}
-                                    >
-                                    {moment(blog.editTime).fromNow()}
+                                <div className="p-8 md:w-[500px] ">
+                                    <div className="uppercase tracking-wide text-sm text-primary font-semibold"><Link href={`/view/${blog.owner}/${blog.id}`}>{blog.title}</Link></div>
+                                    <a href="#" className="block mt-1 text-lg leading-tight font-medium text-black hover:underline">{blog.description}</a>
+                                    <p className="mt-2 text-slate-500">{markdownToText(blog.content).substring(0, 300) + "..."}</p>
                                 </div>
                             </div>
-                            <div className="text-xs font-medium">description</div>
-                            <div className="line-clamp-2 text-xs text-muted-foreground">
-                                {blog.content.substring(0, 300)}
-                            </div> 
                         </div>
-                    </button>
-                ))}
+                    )
+                })}
             </div>
         </ScrollArea>
     )
